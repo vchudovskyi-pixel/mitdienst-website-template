@@ -14,6 +14,7 @@
     <title>Muster Digital GmbH</title>
     <script type="text/javascript">
       ;(function (l) {
+        var basePath = '%BASE_URL%'.replace(/\/$/, '')
         if (l.search[1] === '/') {
           var decoded = l.search
             .slice(1)
@@ -22,7 +23,7 @@
               return s.replace(/~and~/g, '&')
             })
             .join('?')
-          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+          window.history.replaceState(null, null, (basePath || '') + decoded + l.hash)
         }
       })(window.location)
     </script>

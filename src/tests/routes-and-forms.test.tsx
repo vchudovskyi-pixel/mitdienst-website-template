@@ -7,7 +7,9 @@ afterEach(() => {
 })
 
 const renderPath = (path: string) => {
-  window.history.pushState({}, 'Test', path)
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '')
+  const fullPath = path === '/' ? `${basePath || ''}/` : `${basePath}${path}`
+  window.history.pushState({}, 'Test', fullPath)
   render(<App />)
 }
 
