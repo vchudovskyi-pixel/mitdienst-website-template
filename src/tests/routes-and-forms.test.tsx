@@ -292,9 +292,14 @@ describe('form validation', () => {
     fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
     fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
     fireEvent.click(screen.getByLabelText(/^e-mail$/i))
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    const continueButton = screen.getByRole('button', { name: /weiter/i })
+    fireEvent.click(continueButton)
 
-    fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
+    const saveButton = screen.getByRole('button', { name: /anfrage lokal speichern/i })
+    expect(saveButton).not.toBe(continueButton)
+    expect(screen.queryByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).not.toBeInTheDocument()
+
+    fireEvent.click(saveButton)
 
     expect(screen.getByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).toBeInTheDocument()
 

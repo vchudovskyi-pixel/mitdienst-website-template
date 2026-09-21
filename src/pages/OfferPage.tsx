@@ -494,11 +494,11 @@ export default function OfferPage() {
               Zurück
             </button>
             {step < steps.length - 1 ? (
-              <button type="button" className="btn btn-primary" onClick={nextStep}>
+              <button key="next-step" type="button" className="btn btn-primary" onClick={nextStep}>
                 Weiter
               </button>
             ) : (
-              <button type="submit" className="btn btn-primary">
+              <button key="save-offer" type="submit" className="btn btn-primary">
                 Anfrage lokal speichern
               </button>
             )}
