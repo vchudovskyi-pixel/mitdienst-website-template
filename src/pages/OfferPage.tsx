@@ -107,6 +107,16 @@ export default function OfferPage() {
     return undefined
   }
 
+  const mergeStepErrors = (current: OfferErrors, currentStep: number, nextStepErrors: OfferErrors) => {
+    const remainingErrors = { ...current }
+
+    stepFields[currentStep].forEach((field) => {
+      delete remainingErrors[field]
+    })
+
+    return { ...remainingErrors, ...nextStepErrors }
+  }
+
   const updateField = <K extends keyof OfferData>(field: K, value: OfferData[K]) => {
     const nextData = { ...data, [field]: value }
     setData(nextData)
@@ -132,7 +142,7 @@ export default function OfferPage() {
 
   const nextStep = () => {
     const stepErrors = validateStep(step)
-    setErrors(stepErrors)
+    setErrors((current) => mergeStepErrors(current, step, stepErrors))
 
     if (Object.keys(stepErrors).length > 0) {
       errorSummaryRef.current?.focus()
@@ -143,7 +153,6 @@ export default function OfferPage() {
   }
 
   const previousStep = () => {
-    setErrors({})
     setStep((current) => Math.max(current - 1, 0))
   }
 
