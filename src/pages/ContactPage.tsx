@@ -31,6 +31,35 @@ export default function ContactPage() {
     return nextErrors
   }
 
+  const validateField = (field: keyof ContactFormData, values: ContactFormData) => {
+    if (field === 'name' && !values.name.trim()) return 'Bitte geben Sie Ihren Namen ein.'
+    if (field === 'email') {
+      if (!values.email.trim()) return 'Bitte geben Sie Ihre E-Mail-Adresse ein.'
+      if (!emailPattern.test(values.email)) return 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
+    }
+    if (field === 'message' && !values.message.trim()) return 'Bitte geben Sie eine Nachricht ein.'
+
+    return undefined
+  }
+
+  const updateField = <K extends keyof ContactFormData>(field: K, value: ContactFormData[K]) => {
+    const nextData = { ...data, [field]: value }
+    setData(nextData)
+
+    if (!errors[field]) return
+
+    setErrors((current) => {
+      if (!current[field]) return current
+
+      const nextError = validateField(field, nextData)
+
+      if (nextError) return { ...current, [field]: nextError }
+
+      const { [field]: _removed, ...rest } = current
+      return rest
+    })
+  }
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSent(false)
@@ -80,7 +109,7 @@ export default function ContactPage() {
               name="name"
               required
               value={data.name}
-              onChange={(event) => setData((current) => ({ ...current, name: event.target.value }))}
+              onChange={(event) => updateField('name', event.target.value)}
               aria-invalid={Boolean(errors.name)}
               aria-describedby={errors.name ? 'name-error' : undefined}
             />
@@ -99,7 +128,7 @@ export default function ContactPage() {
               type="email"
               required
               value={data.email}
-              onChange={(event) => setData((current) => ({ ...current, email: event.target.value }))}
+              onChange={(event) => updateField('email', event.target.value)}
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? 'email-error' : undefined}
             />
@@ -116,7 +145,7 @@ export default function ContactPage() {
               id="company"
               name="company"
               value={data.company}
-              onChange={(event) => setData((current) => ({ ...current, company: event.target.value }))}
+              onChange={(event) => updateField('company', event.target.value)}
             />
           </div>
 
@@ -128,7 +157,7 @@ export default function ContactPage() {
               required
               rows={6}
               value={data.message}
-              onChange={(event) => setData((current) => ({ ...current, message: event.target.value }))}
+              onChange={(event) => updateField('message', event.target.value)}
               aria-invalid={Boolean(errors.message)}
               aria-describedby={errors.message ? 'message-error' : undefined}
             />

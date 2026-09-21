@@ -42,6 +42,27 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte geben sie eine nachricht ein/i)).toBeInTheDocument()
   })
 
+  it('clears only the corrected contact field error immediately', () => {
+    renderPath('/kontakt')
+
+    fireEvent.click(screen.getByRole('button', { name: /unverbindlich absenden/i }))
+
+    const nameInput = screen.getByLabelText(/name \*/i)
+    const emailInput = screen.getByLabelText(/e-mail \*/i)
+
+    expect(nameInput).toHaveAttribute('aria-invalid', 'true')
+    expect(nameInput).toHaveAttribute('aria-describedby', 'name-error')
+    expect(emailInput).toHaveAttribute('aria-invalid', 'true')
+
+    fireEvent.change(nameInput, { target: { value: 'Anna Beispiel' } })
+
+    expect(nameInput).toHaveAttribute('aria-invalid', 'false')
+    expect(nameInput).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte geben sie ihren namen ein/i)).not.toBeInTheDocument()
+    expect(emailInput).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte geben sie ihre e-mail-adresse ein/i)).toBeInTheDocument()
+  })
+
   it('blocks wizard progression when required fields are missing', () => {
     renderPath('/angebot')
 
@@ -75,6 +96,70 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte wählen sie eine kontaktmethode/i)).toBeInTheDocument()
   })
 
+  it('clears only the corrected wizard field errors immediately', () => {
+    renderPath('/angebot')
+
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const projectType = screen.getByLabelText(/projektart \*/i)
+    const goals = screen.getByLabelText(/projektziel \*/i)
+
+    expect(projectType).toHaveAttribute('aria-invalid', 'true')
+    expect(goals).toHaveAttribute('aria-invalid', 'true')
+
+    fireEvent.change(projectType, { target: { value: 'Website-Relaunch' } })
+
+    expect(projectType).toHaveAttribute('aria-invalid', 'false')
+    expect(projectType).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte wählen sie eine projektart aus/i)).not.toBeInTheDocument()
+    expect(goals).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte beschreiben sie ihr projektziel/i)).toBeInTheDocument()
+
+    fireEvent.change(goals, { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const timeframe = screen.getByLabelText(/zeitrahmen \*/i)
+    const budget = screen.getByLabelText(/budgetrahmen \*/i)
+
+    expect(timeframe).toHaveAttribute('aria-invalid', 'true')
+    expect(budget).toHaveAttribute('aria-invalid', 'true')
+
+    fireEvent.change(timeframe, { target: { value: 'In 1–2 Monaten' } })
+
+    expect(timeframe).toHaveAttribute('aria-invalid', 'false')
+    expect(timeframe).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte wählen sie einen zeitrahmen/i)).not.toBeInTheDocument()
+    expect(budget).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte wählen sie ein budget/i)).toBeInTheDocument()
+
+    fireEvent.change(budget, { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), {
+      target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const contactName = screen.getByLabelText(/ansprechpartner \*/i)
+    const contactEmail = screen.getByLabelText(/^e-mail \*/i)
+
+    expect(contactName).toHaveAttribute('aria-invalid', 'true')
+    expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
+
+    fireEvent.change(contactName, { target: { value: 'Anna Beispiel' } })
+
+    expect(contactName).toHaveAttribute('aria-invalid', 'false')
+    expect(contactName).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte geben sie einen ansprechpartner an/i)).not.toBeInTheDocument()
+    expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
+  })
+
   it('submits wizard through all steps', () => {
     renderPath('/angebot')
 
@@ -96,6 +181,9 @@ describe('form validation', () => {
     fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
     fireEvent.click(screen.getByLabelText(/^e-mail$/i))
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    expect(screen.getByText(/beim speichern wird die anfrage nur lokal simuliert/i)).toBeInTheDocument()
+    expect(screen.queryByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
 

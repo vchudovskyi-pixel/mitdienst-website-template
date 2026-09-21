@@ -81,6 +81,41 @@ export default function OfferPage() {
     return nextErrors
   }
 
+  const validateField = (field: keyof OfferData, values: OfferData) => {
+    if (field === 'projectType' && !values.projectType) return 'Bitte wählen Sie eine Projektart aus.'
+    if (field === 'goals' && !values.goals.trim()) return 'Bitte beschreiben Sie Ihr Projektziel.'
+    if (field === 'company' && !values.company.trim()) return 'Bitte nennen Sie Ihr Unternehmen.'
+    if (field === 'timeframe' && !values.timeframe) return 'Bitte wählen Sie einen Zeitrahmen.'
+    if (field === 'budget' && !values.budget) return 'Bitte wählen Sie ein Budget.'
+    if (field === 'details' && !values.details.trim()) return 'Bitte geben Sie Projektinformationen an.'
+    if (field === 'contactName' && !values.contactName.trim()) return 'Bitte geben Sie einen Ansprechpartner an.'
+    if (field === 'contactEmail') {
+      if (!values.contactEmail.trim()) return 'Bitte geben Sie eine E-Mail-Adresse an.'
+      if (!emailPattern.test(values.contactEmail)) return 'Bitte geben Sie eine gültige E-Mail-Adresse an.'
+    }
+    if (field === 'preferredContact' && !values.preferredContact) return 'Bitte wählen Sie eine Kontaktmethode.'
+
+    return undefined
+  }
+
+  const updateField = <K extends keyof OfferData>(field: K, value: OfferData[K]) => {
+    const nextData = { ...data, [field]: value }
+    setData(nextData)
+
+    if (!errors[field]) return
+
+    setErrors((current) => {
+      if (!current[field]) return current
+
+      const nextError = validateField(field, nextData)
+
+      if (nextError) return { ...current, [field]: nextError }
+
+      const { [field]: _removed, ...rest } = current
+      return rest
+    })
+  }
+
   const currentStepErrors = useMemo(() => Object.keys(errors).length, [errors])
 
   const nextStep = () => {
@@ -146,7 +181,7 @@ export default function OfferPage() {
                   id="projectType"
                   required
                   value={data.projectType}
-                  onChange={(event) => setData((current) => ({ ...current, projectType: event.target.value }))}
+                  onChange={(event) => updateField('projectType', event.target.value)}
                   aria-invalid={Boolean(errors.projectType)}
                   aria-describedby={errors.projectType ? 'projectType-error' : undefined}
                 >
@@ -170,7 +205,7 @@ export default function OfferPage() {
                   required
                   rows={4}
                   value={data.goals}
-                  onChange={(event) => setData((current) => ({ ...current, goals: event.target.value }))}
+                  onChange={(event) => updateField('goals', event.target.value)}
                   aria-invalid={Boolean(errors.goals)}
                   aria-describedby={errors.goals ? 'goals-error' : undefined}
                 />
@@ -191,7 +226,7 @@ export default function OfferPage() {
                   id="companyName"
                   required
                   value={data.company}
-                  onChange={(event) => setData((current) => ({ ...current, company: event.target.value }))}
+                  onChange={(event) => updateField('company', event.target.value)}
                   aria-invalid={Boolean(errors.company)}
                   aria-describedby={errors.company ? 'company-error' : undefined}
                 />
@@ -208,7 +243,7 @@ export default function OfferPage() {
                   id="website"
                   type="url"
                   value={data.website}
-                  onChange={(event) => setData((current) => ({ ...current, website: event.target.value }))}
+                  onChange={(event) => updateField('website', event.target.value)}
                   placeholder="https://www.beispiel.de"
                 />
               </div>
@@ -223,7 +258,7 @@ export default function OfferPage() {
                   id="timeframe"
                   required
                   value={data.timeframe}
-                  onChange={(event) => setData((current) => ({ ...current, timeframe: event.target.value }))}
+                  onChange={(event) => updateField('timeframe', event.target.value)}
                   aria-invalid={Boolean(errors.timeframe)}
                   aria-describedby={errors.timeframe ? 'timeframe-error' : undefined}
                 >
@@ -246,7 +281,7 @@ export default function OfferPage() {
                   id="budget"
                   required
                   value={data.budget}
-                  onChange={(event) => setData((current) => ({ ...current, budget: event.target.value }))}
+                  onChange={(event) => updateField('budget', event.target.value)}
                   aria-invalid={Boolean(errors.budget)}
                   aria-describedby={errors.budget ? 'budget-error' : undefined}
                 >
@@ -273,7 +308,7 @@ export default function OfferPage() {
                 required
                 rows={6}
                 value={data.details}
-                onChange={(event) => setData((current) => ({ ...current, details: event.target.value }))}
+                onChange={(event) => updateField('details', event.target.value)}
                 aria-invalid={Boolean(errors.details)}
                 aria-describedby={errors.details ? 'details-error' : undefined}
               />
@@ -293,7 +328,7 @@ export default function OfferPage() {
                   id="contactName"
                   required
                   value={data.contactName}
-                  onChange={(event) => setData((current) => ({ ...current, contactName: event.target.value }))}
+                  onChange={(event) => updateField('contactName', event.target.value)}
                   aria-invalid={Boolean(errors.contactName)}
                   aria-describedby={errors.contactName ? 'contactName-error' : undefined}
                 />
@@ -310,7 +345,7 @@ export default function OfferPage() {
                   required
                   type="email"
                   value={data.contactEmail}
-                  onChange={(event) => setData((current) => ({ ...current, contactEmail: event.target.value }))}
+                  onChange={(event) => updateField('contactEmail', event.target.value)}
                   aria-invalid={Boolean(errors.contactEmail)}
                   aria-describedby={errors.contactEmail ? 'contactEmail-error' : undefined}
                 />
@@ -326,7 +361,7 @@ export default function OfferPage() {
                   id="contactPhone"
                   type="tel"
                   value={data.contactPhone}
-                  onChange={(event) => setData((current) => ({ ...current, contactPhone: event.target.value }))}
+                  onChange={(event) => updateField('contactPhone', event.target.value)}
                 />
               </div>
               <fieldset className="field" aria-invalid={Boolean(errors.preferredContact)} aria-describedby={errors.preferredContact ? 'preferredContact-error' : undefined}>
@@ -339,7 +374,7 @@ export default function OfferPage() {
                       name="preferredContact"
                       value="E-Mail"
                       checked={data.preferredContact === 'E-Mail'}
-                      onChange={(event) => setData((current) => ({ ...current, preferredContact: event.target.value }))}
+                      onChange={(event) => updateField('preferredContact', event.target.value)}
                     />
                     E-Mail
                   </label>
@@ -349,7 +384,7 @@ export default function OfferPage() {
                       name="preferredContact"
                       value="Telefon"
                       checked={data.preferredContact === 'Telefon'}
-                      onChange={(event) => setData((current) => ({ ...current, preferredContact: event.target.value }))}
+                      onChange={(event) => updateField('preferredContact', event.target.value)}
                     />
                     Telefon
                   </label>
@@ -404,8 +439,12 @@ export default function OfferPage() {
             )}
           </div>
 
-          {submitted ? (
-            <p className="note">Vielen Dank. Die Anfrage wurde nur lokal simuliert und nicht extern übertragen.</p>
+          {step === steps.length - 1 ? (
+            <p className="note">
+              {submitted
+                ? 'Vielen Dank. Die Anfrage wurde nur lokal simuliert und nicht extern übertragen.'
+                : 'Beim Speichern wird die Anfrage nur lokal simuliert und nicht extern übertragen.'}
+            </p>
           ) : null}
         </form>
       </section>
