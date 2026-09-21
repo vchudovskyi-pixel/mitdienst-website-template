@@ -63,6 +63,7 @@ export default function ContactPage() {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSent(false)
+    setFormMessage('')
 
     const nextErrors = validate()
     setErrors(nextErrors)

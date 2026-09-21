@@ -43,6 +43,15 @@ const initialState: OfferData = {
   preferredContact: '',
 }
 
+const stepFields: Array<Array<keyof OfferData>> = [
+  ['projectType', 'goals'],
+  ['company'],
+  ['timeframe', 'budget'],
+  ['details'],
+  ['contactName', 'contactEmail', 'preferredContact'],
+  [],
+]
+
 export default function OfferPage() {
   const [step, setStep] = useState(0)
   const [data, setData] = useState<OfferData>(initialState)
@@ -116,7 +125,10 @@ export default function OfferPage() {
     })
   }
 
-  const currentStepErrors = useMemo(() => Object.keys(errors).length, [errors])
+  const currentStepErrors = useMemo(
+    () => stepFields[step].filter((field) => Boolean(errors[field])).length,
+    [errors, step],
+  )
 
   const nextStep = () => {
     const stepErrors = validateStep(step)

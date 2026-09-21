@@ -63,6 +63,25 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte geben sie ihre e-mail-adresse ein/i)).toBeInTheDocument()
   })
 
+  it('updates and clears the contact email error immediately', () => {
+    renderPath('/kontakt')
+
+    fireEvent.click(screen.getByRole('button', { name: /unverbindlich absenden/i }))
+
+    const emailInput = screen.getByLabelText(/e-mail \*/i)
+
+    fireEvent.change(emailInput, { target: { value: 'ungueltig' } })
+
+    expect(emailInput).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte geben sie eine gültige e-mail-adresse ein/i)).toBeInTheDocument()
+
+    fireEvent.change(emailInput, { target: { value: 'anna@example.de' } })
+
+    expect(emailInput).toHaveAttribute('aria-invalid', 'false')
+    expect(emailInput).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte geben sie eine gültige e-mail-adresse ein/i)).not.toBeInTheDocument()
+  })
+
   it('blocks wizard progression when required fields are missing', () => {
     renderPath('/angebot')
 
@@ -156,6 +175,41 @@ describe('form validation', () => {
     expect(contactName).toHaveAttribute('aria-invalid', 'false')
     expect(contactName).not.toHaveAttribute('aria-describedby')
     expect(screen.queryByText(/bitte geben sie einen ansprechpartner an/i)).not.toBeInTheDocument()
+    expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
+  })
+
+  it('clears the preferred contact error immediately without clearing other contact-step errors', () => {
+    renderPath('/angebot')
+
+    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
+    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/zeitrahmen/i), { target: { value: 'In 1–2 Monaten' } })
+    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), {
+      target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const preferredEmail = screen.getByLabelText(/^e-mail$/i)
+    const contactEmail = screen.getByLabelText(/^e-mail \*/i)
+
+    expect(preferredEmail.closest('fieldset')).toHaveAttribute('aria-invalid', 'true')
+    expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
+
+    fireEvent.click(preferredEmail)
+
+    expect(preferredEmail.closest('fieldset')).toHaveAttribute('aria-invalid', 'false')
+    expect(preferredEmail.closest('fieldset')).not.toHaveAttribute('aria-describedby')
+    expect(screen.queryByText(/bitte wählen sie eine kontaktmethode/i)).not.toBeInTheDocument()
     expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
     expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
   })
