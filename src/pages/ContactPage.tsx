@@ -1,0 +1,148 @@
+import { FormEvent, useRef, useState } from 'react'
+import PageMeta from '../components/PageMeta'
+
+type ContactFormData = {
+  name: string
+  email: string
+  company: string
+  message: string
+}
+
+type ContactErrors = Partial<Record<keyof ContactFormData, string>>
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export default function ContactPage() {
+  const [data, setData] = useState<ContactFormData>({ name: '', email: '', company: '', message: '' })
+  const [errors, setErrors] = useState<ContactErrors>({})
+  const [sent, setSent] = useState(false)
+  const [formMessage, setFormMessage] = useState('')
+  const summaryRef = useRef<HTMLDivElement>(null)
+
+  const validate = () => {
+    const nextErrors: ContactErrors = {}
+
+    if (!data.name.trim()) nextErrors.name = 'Bitte geben Sie Ihren Namen ein.'
+    if (!data.email.trim()) nextErrors.email = 'Bitte geben Sie Ihre E-Mail-Adresse ein.'
+    else if (!emailPattern.test(data.email)) nextErrors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
+    if (!data.message.trim()) nextErrors.message = 'Bitte geben Sie eine Nachricht ein.'
+
+    return nextErrors
+  }
+
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSent(false)
+
+    const nextErrors = validate()
+    setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
+      setFormMessage('Bitte prüfen Sie die markierten Felder.')
+      summaryRef.current?.focus()
+      return
+    }
+
+    setFormMessage('Vielen Dank. Ihre Anfrage wurde lokal erfasst (keine externe Übertragung).')
+    setSent(true)
+    setData({ name: '', email: '', company: '', message: '' })
+  }
+
+  return (
+    <>
+      <PageMeta
+        title="Kontakt"
+        description="Kontaktformular der Muster Digital GmbH für unverbindliche Projektanfragen ohne externe Datenübertragung."
+      />
+      <section>
+        <h1>Kontakt</h1>
+        <p>Schreiben Sie uns zu Ihrem Vorhaben. Wir melden uns mit einer ersten Einschätzung zurück.</p>
+      </section>
+
+      <section>
+        <form noValidate className="form" onSubmit={onSubmit}>
+          <div
+            ref={summaryRef}
+            tabIndex={-1}
+            className="form-status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {formMessage}
+          </div>
+
+          <div className="field">
+            <label htmlFor="name">Name *</label>
+            <input
+              id="name"
+              name="name"
+              required
+              value={data.name}
+              onChange={(event) => setData((current) => ({ ...current, name: event.target.value }))}
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+            />
+            {errors.name ? (
+              <p className="error" id="name-error">
+                {errors.name}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="field">
+            <label htmlFor="email">E-Mail *</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              value={data.email}
+              onChange={(event) => setData((current) => ({ ...current, email: event.target.value }))}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+            />
+            {errors.email ? (
+              <p className="error" id="email-error">
+                {errors.email}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="field">
+            <label htmlFor="company">Unternehmen</label>
+            <input
+              id="company"
+              name="company"
+              value={data.company}
+              onChange={(event) => setData((current) => ({ ...current, company: event.target.value }))}
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="message">Nachricht *</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows={6}
+              value={data.message}
+              onChange={(event) => setData((current) => ({ ...current, message: event.target.value }))}
+              aria-invalid={Boolean(errors.message)}
+              aria-describedby={errors.message ? 'message-error' : undefined}
+            />
+            {errors.message ? (
+              <p className="error" id="message-error">
+                {errors.message}
+              </p>
+            ) : null}
+          </div>
+
+          <button className="btn btn-primary" type="submit">
+            Unverbindlich absenden
+          </button>
+          {sent ? <p className="note">Es erfolgt keine externe Übertragung der Daten.</p> : null}
+        </form>
+      </section>
+    </>
+  )
+}

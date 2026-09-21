@@ -1,32 +1,82 @@
-# React + TypeScript + Vite
+# Muster Digital GmbH – Demo-Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Diese Anwendung ist eine vollständige, fiktive Agentur-Website für **Muster Digital GmbH** (Demo-Zwecke), umgesetzt mit React + TypeScript + Vite.
 
-Currently, two official plugins are available:
+## Technologie
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Vitest + Testing Library (Basis-Test)
+- Oxlint
 
-## React Compiler
+## Projektstruktur
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/components` – Layout- und Metadaten-Komponenten
+- `src/pages` – Alle Seitenrouten (`/`, `/leistungen`, `/referenzen`, `/ueber-uns`, `/angebot`, `/kontakt`, `/impressum`, `/datenschutz`)
+- `src/tests` – Basis-Tests
+- `src/index.css` – Globales Designsystem, responsive Layout, Fokus-Styles
 
-## Expanding the Oxlint configuration
+## Installation
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Lokale Entwicklung
+
+```bash
+npm run dev
+```
+
+## Production Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Tests
+
+```bash
+npm run test
+npm run lint
+```
+
+## Wichtige Designentscheidungen
+
+- Eigenständige visuelle Sprache mit klarer Typografie, Kartenlayout und ruhigen Abständen.
+- Seitenstruktur mit klaren CTAs und Service-/Prozess-Fokus für deutsche KMU.
+- Mehrstufiger Projektfragebogen (`/angebot`) mit Schrittanzeige, Validierung und Zusammenfassung.
+- Kontaktformular (`/kontakt`) mit lokaler Validierung ohne externe Datenübertragung.
+
+## Accessibility (WCAG-Basics)
+
+- `lang="de"` im HTML-Dokument.
+- Semantische Struktur (`header`, `nav`, `main`, `section`, `footer`) und genau ein `h1` pro Seite.
+- Skip-Link „Zum Inhalt springen“.
+- Tastaturbedienbare Navigation und sichtbare Fokuszustände.
+- Formulare mit Labels, `required`, Fehlermeldungen und ARIA-Verknüpfung.
+- Responsive Layout ohne erzwungenes Deaktivieren von Zoom.
+
+## SEO-Umsetzung
+
+- Seitenindividuelle Titel und Meta-Descriptions.
+- Robots `index,follow`.
+- Open-Graph-Basismeta via `PageMeta`.
+- Sinnvolle interne Verlinkung über Navigation und Footer.
+- Keine produktive Canonical-URL gesetzt, da keine finale Domain bekannt ist.
+
+## Bekannte Einschränkungen
+
+- Referenzen sind ausschließlich fiktive Showcase-Projekte.
+- Formulare speichern nur lokal im UI-Flow und senden nichts an externe Dienste.
+- Es ist nur ein Basis-Test enthalten; für produktiven Einsatz sollten zusätzliche E2E- und Accessibility-Tests ergänzt werden.
+
+## Vor Produktivsetzung unbedingt ergänzen
+
+1. Echte, rechtskonforme Inhalte für `Impressum` und `Datenschutz`.
+2. Reale Unternehmensdaten und rechtliche Angaben.
+3. Datenschutzkonforme Einbindung evtl. Drittanbieter-Tools.
+4. Deployment-Konfiguration inkl. finaler Domain/Canonical-Strategie.
