@@ -1,6 +1,9 @@
 name: Deploy static preview to GitHub Pages
 
 on:
+  push:
+    branches:
+      - copilot/build-website-for-muster-digital-gmbh
   workflow_dispatch:
 
 permissions:
