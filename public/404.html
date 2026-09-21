@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <title>Muster Digital GmbH</title>
     <script type="text/javascript">
-      var pathSegmentsToKeep = 1
       var l = window.location
+      var pathSegmentsToKeep = l.pathname.split('/').filter(Boolean).length > 1 ? 1 : 0
       l.replace(
         l.protocol +
           '//' +

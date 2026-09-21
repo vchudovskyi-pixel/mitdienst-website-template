@@ -68,7 +68,7 @@ describe('form validation', () => {
 
     fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
     fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
-    fireEvent.click(screen.getByLabelText(/e-mail$/i))
+    fireEvent.click(screen.getByLabelText(/^e-mail$/i))
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
 
     fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
