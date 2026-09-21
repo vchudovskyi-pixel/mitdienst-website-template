@@ -120,6 +120,7 @@ export default function OfferPage() {
   const updateField = <K extends keyof OfferData>(field: K, value: OfferData[K]) => {
     const nextData = { ...data, [field]: value }
     setData(nextData)
+    setSubmitted(false)
 
     if (!errors[field]) return
 
@@ -153,6 +154,7 @@ export default function OfferPage() {
   }
 
   const previousStep = () => {
+    setSubmitted(false)
     setStep((current) => Math.max(current - 1, 0))
   }
 

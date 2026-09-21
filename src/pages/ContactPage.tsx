@@ -75,9 +75,9 @@ export default function ContactPage() {
     }
 
     setErrors({})
+    setData({ name: '', email: '', company: '', message: '' })
     setFormMessage('Vielen Dank. Ihre Anfrage wurde lokal erfasst (keine externe Übertragung).')
     setSent(true)
-    setData({ name: '', email: '', company: '', message: '' })
   }
 
   return (
