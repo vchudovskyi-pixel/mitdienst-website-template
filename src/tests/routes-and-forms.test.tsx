@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import App from '../App'
 
 afterEach(() => {
@@ -42,6 +42,18 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte geben sie eine nachricht ein/i)).toBeInTheDocument()
   })
 
+  it('moves focus to the first invalid contact control instead of the summary', async () => {
+    renderPath('/kontakt')
+
+    fireEvent.click(screen.getByRole('button', { name: /unverbindlich absenden/i }))
+
+    const nameInput = screen.getByLabelText(/name \*/i)
+    const summary = screen.getByText(/bitte prüfen sie die markierten felder/i)
+
+    await waitFor(() => expect(nameInput).toHaveFocus())
+    expect(summary).not.toHaveFocus()
+  })
+
   it('clears only the corrected contact field error immediately', () => {
     renderPath('/kontakt')
 
@@ -82,6 +94,18 @@ describe('form validation', () => {
     expect(screen.queryByText(/bitte geben sie eine gültige e-mail-adresse ein/i)).not.toBeInTheDocument()
   })
 
+  it('moves focus to the first invalid wizard control on step 1', async () => {
+    renderPath('/angebot')
+
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const projectType = screen.getByLabelText(/projektart \*/i)
+    const summary = screen.getByText(/bitte korrigieren sie die markierten felder/i)
+
+    await waitFor(() => expect(projectType).toHaveFocus())
+    expect(summary).not.toHaveFocus()
+  })
+
   it('blocks wizard progression when required fields are missing', () => {
     renderPath('/angebot')
 
@@ -89,6 +113,40 @@ describe('form validation', () => {
 
     expect(screen.getByText(/bitte wählen sie eine projektart aus/i)).toBeInTheDocument()
     expect(screen.getByText(/bitte beschreiben sie ihr projektziel/i)).toBeInTheDocument()
+  })
+
+  it('moves focus to the first invalid wizard control on each later validation step', async () => {
+    renderPath('/angebot')
+
+    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
+    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const company = screen.getByLabelText(/unternehmen \*/i)
+    await waitFor(() => expect(company).toHaveFocus())
+
+    fireEvent.change(company, { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const timeframe = screen.getByLabelText(/zeitrahmen \*/i)
+    await waitFor(() => expect(timeframe).toHaveFocus())
+
+    fireEvent.change(timeframe, { target: { value: 'In 1–2 Monaten' } })
+    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const details = screen.getByLabelText(/projektbeschreibung \*/i)
+    await waitFor(() => expect(details).toHaveFocus())
+
+    fireEvent.change(details, { target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const contactName = screen.getByLabelText(/ansprechpartner \*/i)
+    await waitFor(() => expect(contactName).toHaveFocus())
   })
 
   it('requires a preferred contact method before the summary step', () => {
@@ -214,7 +272,7 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
   })
 
-  it('submits wizard through all steps', () => {
+  it('shows no confirmation on initial summary-step entry and only after final save', () => {
     renderPath('/angebot')
 
     fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
@@ -236,11 +294,44 @@ describe('form validation', () => {
     fireEvent.click(screen.getByLabelText(/^e-mail$/i))
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
 
-    expect(screen.getByText(/beim speichern wird die anfrage nur lokal simuliert/i)).toBeInTheDocument()
     expect(screen.queryByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
 
     expect(screen.getByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).toBeInTheDocument()
+  })
+
+  it('resets the saved confirmation after editing data following a save', () => {
+    renderPath('/angebot')
+
+    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
+    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/zeitrahmen/i), { target: { value: 'In 1–2 Monaten' } })
+    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), {
+      target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
+    fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
+    fireEvent.click(screen.getByLabelText(/^e-mail$/i))
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
+
+    expect(screen.getByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /zurück/i }))
+    fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel GmbH' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    expect(screen.queryByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).not.toBeInTheDocument()
   })
 })

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
 
@@ -19,6 +19,10 @@ export default function ContactPage() {
   const [sent, setSent] = useState(false)
   const [formMessage, setFormMessage] = useState('')
   const summaryRef = useRef<HTMLDivElement>(null)
+  const pendingFocusFieldRef = useRef<keyof ContactFormData | null>(null)
+  const nameRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const messageRef = useRef<HTMLTextAreaElement>(null)
 
   const validate = () => {
     const nextErrors: ContactErrors = {}
@@ -41,6 +45,21 @@ export default function ContactPage() {
 
     return undefined
   }
+
+  useEffect(() => {
+    const field = pendingFocusFieldRef.current
+    if (!field) return
+
+    const focusMap = {
+      name: nameRef,
+      email: emailRef,
+      company: null,
+      message: messageRef,
+    } as const
+
+    focusMap[field]?.current?.focus()
+    pendingFocusFieldRef.current = null
+  }, [errors])
 
   const updateField = <K extends keyof ContactFormData>(field: K, value: ContactFormData[K]) => {
     const nextData = { ...data, [field]: value }
@@ -70,7 +89,8 @@ export default function ContactPage() {
 
     if (Object.keys(nextErrors).length > 0) {
       setFormMessage('Bitte prüfen Sie die markierten Felder.')
-      summaryRef.current?.focus()
+      pendingFocusFieldRef.current =
+        (['name', 'email', 'message'] as const).find((field) => Boolean(nextErrors[field])) ?? null
       return
     }
 
@@ -109,6 +129,7 @@ export default function ContactPage() {
               id="name"
               name="name"
               required
+              ref={nameRef}
               value={data.name}
               onChange={(event) => updateField('name', event.target.value)}
               aria-invalid={Boolean(errors.name)}
@@ -128,6 +149,7 @@ export default function ContactPage() {
               name="email"
               type="email"
               required
+              ref={emailRef}
               value={data.email}
               onChange={(event) => updateField('email', event.target.value)}
               aria-invalid={Boolean(errors.email)}
@@ -157,6 +179,7 @@ export default function ContactPage() {
               name="message"
               required
               rows={6}
+              ref={messageRef}
               value={data.message}
               onChange={(event) => updateField('message', event.target.value)}
               aria-invalid={Boolean(errors.message)}

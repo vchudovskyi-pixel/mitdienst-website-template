@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
 
@@ -58,6 +58,16 @@ export default function OfferPage() {
   const [errors, setErrors] = useState<OfferErrors>({})
   const [submitted, setSubmitted] = useState(false)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
+  const pendingFocusFieldRef = useRef<keyof OfferData | null>(null)
+  const projectTypeRef = useRef<HTMLSelectElement>(null)
+  const goalsRef = useRef<HTMLTextAreaElement>(null)
+  const companyRef = useRef<HTMLInputElement>(null)
+  const timeframeRef = useRef<HTMLSelectElement>(null)
+  const budgetRef = useRef<HTMLSelectElement>(null)
+  const detailsRef = useRef<HTMLTextAreaElement>(null)
+  const contactNameRef = useRef<HTMLInputElement>(null)
+  const contactEmailRef = useRef<HTMLInputElement>(null)
+  const preferredContactRef = useRef<HTMLInputElement>(null)
 
   const validateStep = (currentStep: number) => {
     const nextErrors: OfferErrors = {}
@@ -141,12 +151,34 @@ export default function OfferPage() {
     [errors, step],
   )
 
+  useEffect(() => {
+    const field = pendingFocusFieldRef.current
+    if (!field) return
+
+    const focusMap = {
+      projectType: projectTypeRef,
+      goals: goalsRef,
+      company: companyRef,
+      website: null,
+      timeframe: timeframeRef,
+      budget: budgetRef,
+      details: detailsRef,
+      contactName: contactNameRef,
+      contactEmail: contactEmailRef,
+      contactPhone: null,
+      preferredContact: preferredContactRef,
+    } as const
+
+    focusMap[field]?.current?.focus()
+    pendingFocusFieldRef.current = null
+  }, [errors, step])
+
   const nextStep = () => {
     const stepErrors = validateStep(step)
     setErrors((current) => mergeStepErrors(current, step, stepErrors))
 
     if (Object.keys(stepErrors).length > 0) {
-      errorSummaryRef.current?.focus()
+      pendingFocusFieldRef.current = stepFields[step].find((field) => Boolean(stepErrors[field])) ?? null
       return
     }
 
@@ -203,6 +235,7 @@ export default function OfferPage() {
                 <select
                   id="projectType"
                   required
+                  ref={projectTypeRef}
                   value={data.projectType}
                   onChange={(event) => updateField('projectType', event.target.value)}
                   aria-invalid={Boolean(errors.projectType)}
@@ -227,6 +260,7 @@ export default function OfferPage() {
                   id="goals"
                   required
                   rows={4}
+                  ref={goalsRef}
                   value={data.goals}
                   onChange={(event) => updateField('goals', event.target.value)}
                   aria-invalid={Boolean(errors.goals)}
@@ -248,6 +282,7 @@ export default function OfferPage() {
                 <input
                   id="companyName"
                   required
+                  ref={companyRef}
                   value={data.company}
                   onChange={(event) => updateField('company', event.target.value)}
                   aria-invalid={Boolean(errors.company)}
@@ -280,6 +315,7 @@ export default function OfferPage() {
                 <select
                   id="timeframe"
                   required
+                  ref={timeframeRef}
                   value={data.timeframe}
                   onChange={(event) => updateField('timeframe', event.target.value)}
                   aria-invalid={Boolean(errors.timeframe)}
@@ -303,6 +339,7 @@ export default function OfferPage() {
                 <select
                   id="budget"
                   required
+                  ref={budgetRef}
                   value={data.budget}
                   onChange={(event) => updateField('budget', event.target.value)}
                   aria-invalid={Boolean(errors.budget)}
@@ -330,6 +367,7 @@ export default function OfferPage() {
                 id="details"
                 required
                 rows={6}
+                ref={detailsRef}
                 value={data.details}
                 onChange={(event) => updateField('details', event.target.value)}
                 aria-invalid={Boolean(errors.details)}
@@ -350,6 +388,7 @@ export default function OfferPage() {
                 <input
                   id="contactName"
                   required
+                  ref={contactNameRef}
                   value={data.contactName}
                   onChange={(event) => updateField('contactName', event.target.value)}
                   aria-invalid={Boolean(errors.contactName)}
@@ -367,6 +406,7 @@ export default function OfferPage() {
                   id="contactEmail"
                   required
                   type="email"
+                  ref={contactEmailRef}
                   value={data.contactEmail}
                   onChange={(event) => updateField('contactEmail', event.target.value)}
                   aria-invalid={Boolean(errors.contactEmail)}
@@ -394,6 +434,7 @@ export default function OfferPage() {
                     <input
                       type="radio"
                       required
+                      ref={preferredContactRef}
                       name="preferredContact"
                       value="E-Mail"
                       checked={data.preferredContact === 'E-Mail'}
@@ -462,11 +503,9 @@ export default function OfferPage() {
             )}
           </div>
 
-          {step === steps.length - 1 ? (
+          {step === steps.length - 1 && submitted ? (
             <p className="note">
-              {submitted
-                ? 'Vielen Dank. Die Anfrage wurde nur lokal simuliert und nicht extern übertragen.'
-                : 'Beim Speichern wird die Anfrage nur lokal simuliert und nicht extern übertragen.'}
+              Vielen Dank. Die Anfrage wurde nur lokal simuliert und nicht extern übertragen.
             </p>
           ) : null}
         </form>
