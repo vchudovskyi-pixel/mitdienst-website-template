@@ -5,7 +5,7 @@
       "handle": "filesystem"
     },
     {
-      "src": "/.*",
+      "src": "/(angebot|kontakt|leistungen|referenzen|ueber-uns|impressum|datenschutz|start)/?",
       "dest": "/index.html"
     }
   ]

@@ -51,6 +51,30 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte beschreiben sie ihr projektziel/i)).toBeInTheDocument()
   })
 
+  it('requires a preferred contact method before the summary step', () => {
+    renderPath('/angebot')
+
+    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
+    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/zeitrahmen/i), { target: { value: 'In 1–2 Monaten' } })
+    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), { target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
+    fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    expect(screen.getByText(/bitte wählen sie eine kontaktmethode/i)).toBeInTheDocument()
+  })
+
   it('submits wizard through all steps', () => {
     renderPath('/angebot')
 
