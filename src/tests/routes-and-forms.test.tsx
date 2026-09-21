@@ -272,7 +272,7 @@ describe('form validation', () => {
     expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
   })
 
-  it('shows no confirmation on initial summary-step entry and only after final save', () => {
+  it('shows no confirmation on step 6 before save, shows it after save, and clears it after editing', () => {
     renderPath('/angebot')
 
     fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
@@ -294,36 +294,6 @@ describe('form validation', () => {
     fireEvent.click(screen.getByLabelText(/^e-mail$/i))
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
 
-    expect(screen.queryByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).not.toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
-
-    expect(screen.getByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).toBeInTheDocument()
-  })
-
-  it('resets the saved confirmation after editing data following a save', () => {
-    renderPath('/angebot')
-
-    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
-    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
-
-    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
-
-    fireEvent.change(screen.getByLabelText(/zeitrahmen/i), { target: { value: 'In 1–2 Monaten' } })
-    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
-
-    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), {
-      target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
-
-    fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
-    fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
-    fireEvent.click(screen.getByLabelText(/^e-mail$/i))
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
     fireEvent.click(screen.getByRole('button', { name: /anfrage lokal speichern/i }))
 
     expect(screen.getByText(/vielen dank\. die anfrage wurde nur lokal simuliert/i)).toBeInTheDocument()

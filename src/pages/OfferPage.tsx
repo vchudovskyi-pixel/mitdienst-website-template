@@ -56,7 +56,7 @@ export default function OfferPage() {
   const [step, setStep] = useState(0)
   const [data, setData] = useState<OfferData>(initialState)
   const [errors, setErrors] = useState<OfferErrors>({})
-  const [submitted, setSubmitted] = useState(false)
+  const [hasSaved, setHasSaved] = useState(false)
   const errorSummaryRef = useRef<HTMLDivElement>(null)
   const pendingFocusFieldRef = useRef<keyof OfferData | null>(null)
   const projectTypeRef = useRef<HTMLSelectElement>(null)
@@ -130,7 +130,7 @@ export default function OfferPage() {
   const updateField = <K extends keyof OfferData>(field: K, value: OfferData[K]) => {
     const nextData = { ...data, [field]: value }
     setData(nextData)
-    setSubmitted(false)
+    setHasSaved(false)
 
     if (!errors[field]) return
 
@@ -182,11 +182,12 @@ export default function OfferPage() {
       return
     }
 
+    setHasSaved(false)
     setStep((current) => Math.min(current + 1, steps.length - 1))
   }
 
   const previousStep = () => {
-    setSubmitted(false)
+    setHasSaved(false)
     setStep((current) => Math.max(current - 1, 0))
   }
 
@@ -198,7 +199,7 @@ export default function OfferPage() {
       return
     }
 
-    setSubmitted(true)
+    setHasSaved(true)
   }
 
   return (
@@ -503,7 +504,7 @@ export default function OfferPage() {
             )}
           </div>
 
-          {step === steps.length - 1 && submitted ? (
+          {step === steps.length - 1 && hasSaved ? (
             <p className="note">
               Vielen Dank. Die Anfrage wurde nur lokal simuliert und nicht extern übertragen.
             </p>
