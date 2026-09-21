@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 
 const links = [
@@ -10,6 +11,14 @@ const links = [
 ]
 
 export default function SiteLayout() {
+  const mobileNavRef = useRef<HTMLDetailsElement>(null)
+
+  const closeMobileNav = () => {
+    if (mobileNavRef.current) {
+      mobileNavRef.current.open = false
+    }
+  }
+
   return (
     <>
       <a className="skip-link" href="#hauptinhalt">
@@ -20,13 +29,15 @@ export default function SiteLayout() {
           <NavLink to="/" className="brand" aria-label="Muster Digital GmbH Startseite">
             Muster Digital GmbH
           </NavLink>
-          <details className="mobile-nav">
+          <details className="mobile-nav" ref={mobileNavRef}>
             <summary aria-label="Menü öffnen">Menü</summary>
             <nav aria-label="Hauptnavigation">
               <ul>
                 {links.map((link) => (
                   <li key={link.to}>
-                    <NavLink to={link.to}>{link.label}</NavLink>
+                    <NavLink to={link.to} onClick={closeMobileNav}>
+                      {link.label}
+                    </NavLink>
                   </li>
                 ))}
               </ul>

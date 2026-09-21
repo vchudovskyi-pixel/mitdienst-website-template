@@ -1,4 +1,5 @@
-import { FormEvent, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
 
 type ContactFormData = {
@@ -43,6 +44,7 @@ export default function ContactPage() {
       return
     }
 
+    setErrors({})
     setFormMessage('Vielen Dank. Ihre Anfrage wurde lokal erfasst (keine externe Übertragung).')
     setSent(true)
     setData({ name: '', email: '', company: '', message: '' })

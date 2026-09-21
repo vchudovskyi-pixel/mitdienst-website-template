@@ -72,7 +72,7 @@ npm run lint
 
 - Referenzen sind ausschließlich fiktive Showcase-Projekte.
 - Formulare speichern nur lokal im UI-Flow und senden nichts an externe Dienste.
-- Es ist nur ein Basis-Test enthalten; für produktiven Einsatz sollten zusätzliche E2E- und Accessibility-Tests ergänzt werden.
+- Es sind Route- und Formular-Validierungstests enthalten; für produktiven Einsatz sollten zusätzlich umfassende E2E-, Performance- und Accessibility-Tests ergänzt werden.
 
 ## Vor Produktivsetzung unbedingt ergänzen
 

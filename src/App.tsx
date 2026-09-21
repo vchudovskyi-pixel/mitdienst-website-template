@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import SiteLayout from './components/SiteLayout'
 import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
@@ -9,7 +9,7 @@ import OfferPage from './pages/OfferPage'
 import ReferencesPage from './pages/ReferencesPage'
 import ServicesPage from './pages/ServicesPage'
 
-export default function App() {
+export function AppRoutes() {
   return (
     <Routes>
       <Route element={<SiteLayout />}>
@@ -41,5 +41,13 @@ export default function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }

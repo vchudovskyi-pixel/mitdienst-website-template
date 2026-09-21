@@ -1,4 +1,5 @@
-import { FormEvent, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
 
 type OfferData = {
@@ -328,12 +329,13 @@ export default function OfferPage() {
                   onChange={(event) => setData((current) => ({ ...current, contactPhone: event.target.value }))}
                 />
               </div>
-              <fieldset className="field">
+              <fieldset className="field" aria-invalid={Boolean(errors.preferredContact)} aria-describedby={errors.preferredContact ? 'preferredContact-error' : undefined}>
                 <legend>Bevorzugte Kontaktmethode *</legend>
                 <div className="radio-group">
                   <label>
                     <input
                       type="radio"
+                      required
                       name="preferredContact"
                       value="E-Mail"
                       checked={data.preferredContact === 'E-Mail'}
@@ -352,7 +354,7 @@ export default function OfferPage() {
                     Telefon
                   </label>
                 </div>
-                {errors.preferredContact ? <p className="error">{errors.preferredContact}</p> : null}
+                {errors.preferredContact ? <p className="error" id="preferredContact-error">{errors.preferredContact}</p> : null}
               </fieldset>
             </>
           ) : null}
