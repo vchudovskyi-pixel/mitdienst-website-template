@@ -29,6 +29,11 @@ describe('required routes', () => {
     renderPath(path)
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
   })
+
+  it('keeps the skip link targeting the main content region', () => {
+    renderPath('/')
+    expect(screen.getByRole('link', { name: /zum inhalt springen/i })).toHaveAttribute('href', '#hauptinhalt')
+  })
 })
 
 describe('form validation', () => {

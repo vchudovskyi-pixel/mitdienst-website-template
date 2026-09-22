@@ -38,8 +38,9 @@ summary:focus-visible {
 
 .skip-link {
   position: absolute;
-  left: -999px;
+  left: 1rem;
   top: 1rem;
+  transform: translateY(calc(-100% - 1rem));
   z-index: 999;
   background: #ffffff;
   color: #111827;
@@ -49,7 +50,7 @@ summary:focus-visible {
 }
 
 .skip-link:focus {
-  left: 1rem;
+  transform: translateY(0);
 }
 
 .container {
@@ -393,6 +394,10 @@ legend {
     cursor: pointer;
     list-style: none;
     font-weight: 600;
+  }
+
+  .mobile-nav:not([open]) nav {
+    display: none;
   }
 
   .mobile-nav[open] nav {
