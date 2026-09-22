@@ -65,6 +65,11 @@ export default function ContactPage() {
     const nextData = { ...data, [field]: value }
     setData(nextData)
 
+    if (sent) {
+      setSent(false)
+      setFormMessage('')
+    }
+
     if (!errors[field]) return
 
     setErrors((current) => {

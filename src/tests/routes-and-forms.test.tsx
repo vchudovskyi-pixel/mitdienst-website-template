@@ -94,6 +94,35 @@ describe('form validation', () => {
     expect(screen.queryByText(/bitte geben sie eine gültige e-mail-adresse ein/i)).not.toBeInTheDocument()
   })
 
+  it('resets contact success state after editing and allows a subsequent explicit resubmission', () => {
+    renderPath('/kontakt')
+
+    const nameInput = screen.getByLabelText(/name \*/i)
+    const emailInput = screen.getByLabelText(/e-mail \*/i)
+    const messageInput = screen.getByLabelText(/nachricht \*/i)
+    const submitButton = screen.getByRole('button', { name: /unverbindlich absenden/i })
+
+    fireEvent.change(nameInput, { target: { value: 'Anna Beispiel' } })
+    fireEvent.change(emailInput, { target: { value: 'anna@example.de' } })
+    fireEvent.change(messageInput, { target: { value: 'Erste Testnachricht' } })
+    fireEvent.click(submitButton)
+
+    expect(screen.getByText(/vielen dank\. ihre anfrage wurde lokal erfasst/i)).toBeInTheDocument()
+    expect(screen.getByText(/es erfolgt keine externe übertragung der daten/i)).toBeInTheDocument()
+
+    fireEvent.change(messageInput, { target: { value: 'Überarbeitete Testnachricht' } })
+
+    expect(screen.queryByText(/vielen dank\. ihre anfrage wurde lokal erfasst/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/es erfolgt keine externe übertragung der daten/i)).not.toBeInTheDocument()
+
+    fireEvent.change(nameInput, { target: { value: 'Anna Beispiel' } })
+    fireEvent.change(emailInput, { target: { value: 'anna@example.de' } })
+    fireEvent.click(submitButton)
+
+    expect(screen.getByText(/vielen dank\. ihre anfrage wurde lokal erfasst/i)).toBeInTheDocument()
+    expect(screen.getByText(/es erfolgt keine externe übertragung der daten/i)).toBeInTheDocument()
+  })
+
   it('moves focus to the first invalid wizard control on step 1', async () => {
     renderPath('/angebot')
 
