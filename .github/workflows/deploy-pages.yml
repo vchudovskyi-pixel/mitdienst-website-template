@@ -3,7 +3,7 @@ name: Deploy static preview to GitHub Pages
 on:
   push:
     branches:
-      - copilot/build-website-for-muster-digital-gmbh
+      - main
   workflow_dispatch:
 
 permissions:
@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_APP_BASE_PATH: /muster-digital-copilot-test/
+          VITE_APP_BASE_PATH: /mitdienst-website-template/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

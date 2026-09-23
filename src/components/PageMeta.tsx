@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { siteContent } from '../content/siteContent'
 
 type PageMetaProps = {
   title: string
@@ -27,7 +28,7 @@ const setMetaByProperty = (property: string, content: string) => {
 
 export default function PageMeta({ title, description }: PageMetaProps) {
   useEffect(() => {
-    const fullTitle = `${title} | Muster Digital GmbH`
+    const fullTitle = `${title} | ${siteContent.seo.siteName}`
 
     document.title = fullTitle
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
+import { siteContent } from '../content/siteContent'
 
 type OfferData = {
   projectType: string
@@ -51,6 +52,11 @@ const stepFields: Array<Array<keyof OfferData>> = [
   ['contactName', 'contactEmail', 'preferredContact'],
   [],
 ]
+
+const projectTypes = ['[PRIMARY_SERVICE]', '[SECONDARY_SERVICE_1]', '[SECONDARY_SERVICE_2]', '[SECONDARY_SERVICE_3]']
+const timeframes = ['Sofortiger Start', 'In 1–2 Monaten', 'In 3–6 Monaten', 'Noch offen']
+const budgets = ['[BUDGET_RANGE_1]', '[BUDGET_RANGE_2]', '[BUDGET_RANGE_3]', 'Noch unklar']
+const preferredContactOptions = ['E-Mail', 'Telefon'] as const
 
 export default function OfferPage() {
   const [step, setStep] = useState(0)
@@ -204,14 +210,11 @@ export default function OfferPage() {
 
   return (
     <>
-      <PageMeta
-        title="Angebot anfragen"
-        description="Mehrstufiger Projektfragebogen der Muster Digital GmbH zur strukturierten Erfassung von Website-Vorhaben."
-      />
+      <PageMeta title={siteContent.offerPage.metaTitle} description={siteContent.offerPage.metaDescription} />
 
       <section>
         <h1>Projektanfrage</h1>
-        <p>Mit diesem Fragebogen erfassen wir Ihr Vorhaben strukturiert. Pflichtfelder sind mit * markiert.</p>
+        <p>{siteContent.offerPage.intro}</p>
       </section>
 
       <section>
@@ -243,10 +246,11 @@ export default function OfferPage() {
                   aria-describedby={errors.projectType ? 'projectType-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  <option value="Webdesign & Entwicklung">Webdesign & Entwicklung</option>
-                  <option value="Website-Relaunch">Website-Relaunch</option>
-                  <option value="Landingpage">Landingpage</option>
-                  <option value="Strategieberatung">Strategieberatung</option>
+                  {projectTypes.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
                 {errors.projectType ? (
                   <p className="error" id="projectType-error">
@@ -303,7 +307,7 @@ export default function OfferPage() {
                   type="url"
                   value={data.website}
                   onChange={(event) => updateField('website', event.target.value)}
-                  placeholder="https://www.beispiel.de"
+                  placeholder="https://www.[DOMAIN]"
                 />
               </div>
             </>
@@ -323,10 +327,11 @@ export default function OfferPage() {
                   aria-describedby={errors.timeframe ? 'timeframe-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  <option value="Sofortiger Start">Sofortiger Start</option>
-                  <option value="In 1–2 Monaten">In 1–2 Monaten</option>
-                  <option value="In 3–6 Monaten">In 3–6 Monaten</option>
-                  <option value="Noch offen">Noch offen</option>
+                  {timeframes.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
                 {errors.timeframe ? (
                   <p className="error" id="timeframe-error">
@@ -347,10 +352,11 @@ export default function OfferPage() {
                   aria-describedby={errors.budget ? 'budget-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  <option value="5.000–10.000 €">5.000–10.000 €</option>
-                  <option value="10.000–20.000 €">10.000–20.000 €</option>
-                  <option value="20.000 €+">20.000 €+</option>
-                  <option value="Noch unklar">Noch unklar</option>
+                  {budgets.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
                 {errors.budget ? (
                   <p className="error" id="budget-error">
@@ -428,31 +434,27 @@ export default function OfferPage() {
                   onChange={(event) => updateField('contactPhone', event.target.value)}
                 />
               </div>
-              <fieldset className="field" aria-invalid={Boolean(errors.preferredContact)} aria-describedby={errors.preferredContact ? 'preferredContact-error' : undefined}>
+              <fieldset
+                className="field"
+                aria-invalid={Boolean(errors.preferredContact)}
+                aria-describedby={errors.preferredContact ? 'preferredContact-error' : undefined}
+              >
                 <legend>Bevorzugte Kontaktmethode *</legend>
                 <div className="radio-group">
-                  <label>
-                    <input
-                      type="radio"
-                      required
-                      ref={preferredContactRef}
-                      name="preferredContact"
-                      value="E-Mail"
-                      checked={data.preferredContact === 'E-Mail'}
-                      onChange={(event) => updateField('preferredContact', event.target.value)}
-                    />
-                    E-Mail
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="preferredContact"
-                      value="Telefon"
-                      checked={data.preferredContact === 'Telefon'}
-                      onChange={(event) => updateField('preferredContact', event.target.value)}
-                    />
-                    Telefon
-                  </label>
+                  {preferredContactOptions.map((option) => (
+                    <label key={option}>
+                      <input
+                        type="radio"
+                        required
+                        ref={option === 'E-Mail' ? preferredContactRef : undefined}
+                        name="preferredContact"
+                        value={option}
+                        checked={data.preferredContact === option}
+                        onChange={(event) => updateField('preferredContact', event.target.value)}
+                      />
+                      {option}
+                    </label>
+                  ))}
                 </div>
                 {errors.preferredContact ? <p className="error" id="preferredContact-error">{errors.preferredContact}</p> : null}
               </fieldset>

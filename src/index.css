@@ -78,6 +78,7 @@ summary:focus-visible {
   font-weight: 700;
   color: #0f172a;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .desktop-nav ul,
@@ -379,6 +380,18 @@ legend {
 
 .site-footer a:hover {
   color: #ffffff;
+}
+
+.contact-details {
+  font-style: normal;
+}
+
+.contact-details p:last-child {
+  margin-bottom: 0;
+}
+
+.contact-layout {
+  align-items: start;
 }
 
 @media (max-width: 900px) {

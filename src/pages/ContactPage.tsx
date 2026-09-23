@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
+import { siteContent } from '../content/siteContent'
 
 type ContactFormData = {
   name: string
@@ -107,16 +108,13 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageMeta
-        title="Kontakt"
-        description="Kontaktformular der Muster Digital GmbH für unverbindliche Projektanfragen ohne externe Datenübertragung."
-      />
+      <PageMeta title={siteContent.contactPage.metaTitle} description={siteContent.contactPage.metaDescription} />
       <section>
         <h1>Kontakt</h1>
-        <p>Schreiben Sie uns zu Ihrem Vorhaben. Wir melden uns mit einer ersten Einschätzung zurück.</p>
+        <p>{siteContent.contactPage.intro}</p>
       </section>
 
-      <section>
+      <section className="split contact-layout">
         <form noValidate className="form" onSubmit={onSubmit}>
           <div
             ref={summaryRef}
@@ -202,6 +200,20 @@ export default function ContactPage() {
           </button>
           {sent ? <p className="note">Es erfolgt keine externe Übertragung der Daten.</p> : null}
         </form>
+
+        <aside className="card" aria-label="Kontakt-Platzhalter">
+          <h2>Kontakt-Platzhalter</h2>
+          <p>Diese Angaben werden zentral in <code>src/content/siteContent.ts</code> gepflegt.</p>
+          <address className="contact-details">
+            <p>{siteContent.company.legalEntity}</p>
+            {siteContent.company.address.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+            <p>Telefon: {siteContent.company.phone}</p>
+            <p>E-Mail: {siteContent.company.email}</p>
+            <p>Geschäftsführung: {siteContent.company.managingDirector}</p>
+          </address>
+        </aside>
       </section>
     </>
   )

@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import SiteLayout from './components/SiteLayout'
+import { siteContent } from './content/siteContent'
 import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
 import HomePage from './pages/HomePage'
@@ -21,21 +22,11 @@ export function AppRoutes() {
         <Route path="/kontakt" element={<ContactPage />} />
         <Route
           path="/impressum"
-          element={
-            <LegalPlaceholderPage
-              title="Impressum"
-              description="Rechtlicher Platzhalter für das Impressum der Muster Digital GmbH."
-            />
-          }
+          element={<LegalPlaceholderPage title="Impressum" description={siteContent.legalPages.impressumDescription} />}
         />
         <Route
           path="/datenschutz"
-          element={
-            <LegalPlaceholderPage
-              title="Datenschutz"
-              description="Rechtlicher Platzhalter für die Datenschutzhinweise der Muster Digital GmbH."
-            />
-          }
+          element={<LegalPlaceholderPage title="Datenschutz" description={siteContent.legalPages.privacyDescription} />}
         />
         <Route path="/start" element={<Navigate to="/" replace />} />
         <Route path="*" element={<NotFoundPage />} />
