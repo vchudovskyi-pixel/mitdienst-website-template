@@ -4,6 +4,7 @@ import { siteContent } from '../content/siteContent'
 type PageMetaProps = {
   title: string
   description: string
+  appendSiteName?: boolean
 }
 
 const setMetaByName = (name: string, content: string) => {
@@ -26,12 +27,9 @@ const setMetaByProperty = (property: string, content: string) => {
   element.content = content
 }
 
-export default function PageMeta({ title, description }: PageMetaProps) {
+export default function PageMeta({ title, description, appendSiteName = true }: PageMetaProps) {
   useEffect(() => {
-    const fullTitle =
-      title === siteContent.seo.siteName || title === siteContent.seo.defaultTitle
-        ? siteContent.seo.siteName
-        : `${title} | ${siteContent.seo.siteName}`
+    const fullTitle = appendSiteName ? `${title} | ${siteContent.seo.siteName}` : title
 
     document.title = fullTitle
 
@@ -41,7 +39,7 @@ export default function PageMeta({ title, description }: PageMetaProps) {
     setMetaByProperty('og:description', description)
     setMetaByProperty('og:type', 'website')
     setMetaByProperty('og:locale', 'de_DE')
-  }, [description, title])
+  }, [appendSiteName, description, title])
 
   return null
 }

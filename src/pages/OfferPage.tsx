@@ -53,10 +53,6 @@ const stepFields: Array<Array<keyof OfferData>> = [
   [],
 ]
 
-const projectTypes = ['Webdesign & Entwicklung', 'Website-Relaunch', 'Landingpage', 'Strategieberatung']
-const timeframes = ['Sofortiger Start', 'In 1–2 Monaten', 'In 3–6 Monaten', 'Noch offen']
-const budgets = ['5.000–10.000 €', '10.000–20.000 €', '20.000 €+', 'Noch unklar']
-const preferredContactOptions = ['E-Mail', 'Telefon'] as const
 
 export default function OfferPage() {
   const [step, setStep] = useState(0)
@@ -246,7 +242,7 @@ export default function OfferPage() {
                   aria-describedby={errors.projectType ? 'projectType-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  {projectTypes.map((option) => (
+                  {siteContent.offerPage.projectTypes.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -327,7 +323,7 @@ export default function OfferPage() {
                   aria-describedby={errors.timeframe ? 'timeframe-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  {timeframes.map((option) => (
+                  {siteContent.offerPage.timeframes.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -352,7 +348,7 @@ export default function OfferPage() {
                   aria-describedby={errors.budget ? 'budget-error' : undefined}
                 >
                   <option value="">Bitte auswählen</option>
-                  {budgets.map((option) => (
+                  {siteContent.offerPage.budgets.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -441,7 +437,7 @@ export default function OfferPage() {
               >
                 <legend>Bevorzugte Kontaktmethode *</legend>
                 <div className="radio-group">
-                  {preferredContactOptions.map((option) => (
+                  {siteContent.offerPage.preferredContactOptions.map((option) => (
                     <label key={option}>
                       <input
                         type="radio"

@@ -32,9 +32,16 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
-        env:
-          VITE_APP_BASE_PATH: /${{ github.event.repository.name }}/
+        run: |
+          export VITE_APP_BASE_PATH="/$(python - <<'PY'
+import os
+from urllib.parse import quote
+
+repo_name = os.environ['GITHUB_REPOSITORY'].split('/', 1)[1]
+print(quote(repo_name, safe=''))
+PY
+          )/"
+          npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

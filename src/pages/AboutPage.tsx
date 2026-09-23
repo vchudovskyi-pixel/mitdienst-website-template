@@ -1,21 +1,6 @@
 import PageMeta from '../components/PageMeta'
 import { siteContent } from '../content/siteContent'
 
-const cards = [
-  {
-    title: 'Unsere Haltung',
-    text: 'Beschreiben Sie hier, wofür [COMPANY_NAME] steht, welche Zielgruppen angesprochen werden und welchen Anspruch das Unternehmen an seine Website stellt.',
-  },
-  {
-    title: 'Unsere Zusammenarbeit',
-    text: 'Nutzen Sie diesen Abschnitt für Projektabläufe, Ansprechpartner, Entscheidungswege und Kommunikationsprinzipien.',
-  },
-  {
-    title: 'Unser Qualitätsverständnis',
-    text: 'Dokumentieren Sie hier Standards zu Barrierefreiheit, Responsivität, Wartbarkeit, Qualitätssicherung oder Support.',
-  },
-] as const
-
 export default function AboutPage() {
   return (
     <>
@@ -25,7 +10,7 @@ export default function AboutPage() {
         <p>{siteContent.aboutPage.intro}</p>
       </section>
       <section className="split">
-        {cards.map((card) => (
+        {siteContent.aboutPage.cards.map((card) => (
           <article key={card.title} className="card">
             <h2>{card.title}</h2>
             <p>{card.text}</p>

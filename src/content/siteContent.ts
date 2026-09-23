@@ -10,7 +10,6 @@ export const siteContent = {
   },
   seo: {
     siteName: '[COMPANY_NAME]',
-    defaultTitle: '[COMPANY_NAME]',
     defaultDescription:
       'Barrierearme, responsive Website-Vorlage für [COMPANY_NAME] mit klaren Leistungsseiten, Kontaktformular und Angebotsanfrage.',
   },
@@ -50,6 +49,20 @@ export const siteContent = {
       'Vorlage für die Unternehmensdarstellung von [COMPANY_NAME] mit Platzhaltern für Haltung, Zusammenarbeit und Qualitätsverständnis.',
     intro:
       '[COMPANY_NAME] dient hier als klar gekennzeichneter Platzhalter für das zukünftige Kundenunternehmen. Nutzen Sie diese Seite, um Positionierung, Arbeitsweise und Qualitätsanspruch nachvollziehbar zu beschreiben.',
+    cards: [
+      {
+        title: 'Unsere Haltung',
+        text: 'Beschreiben Sie hier, wofür [COMPANY_NAME] steht, welche Zielgruppen angesprochen werden und welchen Anspruch das Unternehmen an seine Website stellt.',
+      },
+      {
+        title: 'Unsere Zusammenarbeit',
+        text: 'Nutzen Sie diesen Abschnitt für Projektabläufe, Ansprechpartner, Entscheidungswege und Kommunikationsprinzipien.',
+      },
+      {
+        title: 'Unser Qualitätsverständnis',
+        text: 'Dokumentieren Sie hier Standards zu Barrierefreiheit, Responsivität, Wartbarkeit, Qualitätssicherung oder Support.',
+      },
+    ],
   },
   referencesPage: {
     metaTitle: 'Referenzen',
@@ -70,6 +83,10 @@ export const siteContent = {
       'Mehrstufige Angebotsvorlage für [COMPANY_NAME] zur strukturierten Erfassung von Website-Vorhaben ohne externe Übertragung.',
     intro:
       'Mit diesem Fragebogen erfassen Sie Website-Vorhaben strukturiert. Pflichtfelder sind mit * markiert.',
+    projectTypes: ['Webdesign & Entwicklung', 'Website-Relaunch', 'Landingpage', 'Strategieberatung'],
+    timeframes: ['Sofortiger Start', 'In 1–2 Monaten', 'In 3–6 Monaten', 'Noch offen'],
+    budgets: ['5.000–10.000 €', '10.000–20.000 €', '20.000 €+', 'Noch unklar'],
+    preferredContactOptions: ['E-Mail', 'Telefon'],
   },
   legalPages: {
     impressumDescription: 'Rechtlicher Platzhalter für das Impressum von [LEGAL_ENTITY].',
