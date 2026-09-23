@@ -53,9 +53,9 @@ const stepFields: Array<Array<keyof OfferData>> = [
   [],
 ]
 
-const projectTypes = ['[PRIMARY_SERVICE]', '[SECONDARY_SERVICE_1]', '[SECONDARY_SERVICE_2]', '[SECONDARY_SERVICE_3]']
+const projectTypes = ['Webdesign & Entwicklung', 'Website-Relaunch', 'Landingpage', 'Strategieberatung']
 const timeframes = ['Sofortiger Start', 'In 1–2 Monaten', 'In 3–6 Monaten', 'Noch offen']
-const budgets = ['[BUDGET_RANGE_1]', '[BUDGET_RANGE_2]', '[BUDGET_RANGE_3]', 'Noch unklar']
+const budgets = ['5.000–10.000 €', '10.000–20.000 €', '20.000 €+', 'Noch unklar']
 const preferredContactOptions = ['E-Mail', 'Telefon'] as const
 
 export default function OfferPage() {
