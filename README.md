@@ -1,82 +1,131 @@
-# Muster Digital GmbH – Demo-Website
+# MITDIENST Website Template
 
-Diese Anwendung ist eine vollständige, fiktive Agentur-Website für **Muster Digital GmbH** (Demo-Zwecke), umgesetzt mit React + TypeScript + Vite.
+Produktionsorientierte React-/TypeScript-/Vite-Vorlage für zukünftige MITDIENST-Kundenwebsites.
+Die bestehende Routing-, Responsive-, Accessibility- und Formularvalidierungs-Architektur aus dem Muster-Digital-Prototyp wurde bewusst beibehalten und auf wiederverwendbare Platzhalter-Inhalte umgestellt.
 
-## Technologie
+## Zweck des Repositorys
+
+Dieses Repository ist der kanonische Ausgangspunkt für neue MITDIENST-Website-Projekte.
+Es stellt eine belastbare Grundstruktur für typische Unternehmenswebsites bereit, inklusive:
+
+- Startseite
+- Leistungen
+- Referenzen
+- Über uns
+- Angebotsanfrage als mehrstufiger Wizard
+- Kontaktformular
+- Impressum
+- Datenschutz
+
+## Technologie-Stack
 
 - React 19
 - TypeScript
 - Vite
 - React Router
-- Vitest + Testing Library (Basis-Test)
+- Vitest + Testing Library
 - Oxlint
-
-## Projektstruktur
-
-- `src/components` – Layout- und Metadaten-Komponenten
-- `src/pages` – Alle Seitenrouten (`/`, `/leistungen`, `/referenzen`, `/ueber-uns`, `/angebot`, `/kontakt`, `/impressum`, `/datenschutz`)
-- `src/tests` – Basis-Tests
-- `src/index.css` – Globales Designsystem, responsive Layout, Fokus-Styles
-
-## Installation
-
-```bash
-npm install
-```
+- Vercel-kompatibles SPA-Routing mit direktem Route-Reload-Support
 
 ## Lokale Entwicklung
 
 ```bash
+npm install
 npm run dev
 ```
 
-## Production Build
+## Build-, Lint- und Test-Kommandos
 
 ```bash
 npm run build
+npm run lint
+npm run test
 npm run preview
 ```
 
-## Tests
+## Wichtige Routen
 
-```bash
-npm run test
-npm run lint
-```
+- `/` – Startseite
+- `/leistungen` – Leistungsübersicht
+- `/referenzen` – Referenz-Platzhalter
+- `/ueber-uns` – Unternehmensdarstellung
+- `/angebot` – mehrstufige Angebotsanfrage
+- `/kontakt` – Kontaktformular
+- `/impressum` – rechtlicher Platzhalter
+- `/datenschutz` – rechtlicher Platzhalter
 
-## Wichtige Designentscheidungen
+## Wo kundenspezifische Inhalte konfiguriert werden
 
-- Eigenständige visuelle Sprache mit klarer Typografie, Kartenlayout und ruhigen Abständen.
-- Seitenstruktur mit klaren CTAs und Service-/Prozess-Fokus für deutsche KMU.
-- Mehrstufiger Projektfragebogen (`/angebot`) mit Schrittanzeige, Validierung und Zusammenfassung.
-- Kontaktformular (`/kontakt`) mit lokaler Validierung ohne externe Datenübertragung.
+### Zentrale Inhalte
 
-## Accessibility (WCAG-Basics)
+Die meisten austauschbaren Inhalte und Platzhalter liegen in:
 
-- `lang="de"` im HTML-Dokument.
-- Semantische Struktur (`header`, `nav`, `main`, `section`, `footer`) und genau ein `h1` pro Seite.
-- Skip-Link „Zum Inhalt springen“.
-- Tastaturbedienbare Navigation und sichtbare Fokuszustände.
-- Formulare mit Labels, `required`, Fehlermeldungen und ARIA-Verknüpfung.
-- Responsive Layout ohne erzwungenes Deaktivieren von Zoom.
+- `src/content/siteContent.ts`
 
-## SEO-Umsetzung
+Dort werden insbesondere gepflegt:
 
-- Seitenindividuelle Titel und Meta-Descriptions.
-- Robots `index,follow`.
-- Open-Graph-Basismeta via `PageMeta`.
-- Sinnvolle interne Verlinkung über Navigation und Footer.
-- Keine produktive Canonical-URL gesetzt, da keine finale Domain bekannt ist.
+- Firmenname und Tagline
+- Kontakt- und Rechtsangaben
+- Navigation
+- SEO-Grundwerte
+- Leistungsbausteine
+- Referenz-Platzhalter
+- Texte für Startseite, Über uns, Kontakt und Rechtstexte
+- Auswahloptionen für den Angebotswizard
 
-## Bekannte Einschränkungen
+### Branding und Assets
 
-- Referenzen sind ausschließlich fiktive Showcase-Projekte.
-- Formulare speichern nur lokal im UI-Flow und senden nichts an externe Dienste.
-- Es sind Route- und Formular-Validierungstests enthalten; für produktiven Einsatz sollten zusätzlich umfassende E2E-, Performance- und Accessibility-Tests ergänzt werden.
+Folgende Dateien werden üblicherweise pro Kundenprojekt angepasst:
 
-## Vor Produktivsetzung unbedingt ergänzen
+- `src/index.css` – Farbwerte und visuelle Branding-Basics über CSS-Variablen im `:root`
+- `public/favicon.svg` – Favicon / Browser-Icon
+- `public/icons.svg` – optionale SVG-Sprite-Datei für projektspezifische Icons
+- `index.html` – Default-Meta-Description und Dokumenttitel
 
-1. Echte, rechtskonforme Inhalte für `Impressum` und `Datenschutz`.
-2. Reale Unternehmensdaten und rechtliche Angaben.
-3. Datenschutzkonforme Einbindung evtl. Drittanbieter-Tools.
-4. Deployment-Konfiguration inkl. finaler Domain/Canonical-Strategie.
+## Neues Kundenprojekt aus der Vorlage ableiten
+
+1. Neues Projekt-Repository oder neuen Branch aus dieser Vorlage erstellen.
+2. `src/content/siteContent.ts` mit freigegebenen Kundeninhalten befüllen.
+3. Branding in `src/index.css` sowie ggf. `public/favicon.svg` und `public/icons.svg` ersetzen.
+4. Platzhalter für Impressum und Datenschutz durch rechtsgeprüfte Inhalte ersetzen.
+5. Referenz-, Leistungs- und SEO-Inhalte pro Kundenprojekt abstimmen.
+6. Browser-QA auf mobilen und Desktop-Breakpoints durchführen.
+7. Erst nach erfolgreicher unabhängiger QA produktive Freigabe erteilen.
+
+## Vor Produktion ersetzen
+
+Vor einem Go-live müssen mindestens diese Punkte projektspezifisch ersetzt oder bestätigt werden:
+
+- `[COMPANY_NAME]`, `[COMPANY_TAGLINE]`, `[LEGAL_ENTITY]`, `[MANAGING_DIRECTOR]`
+- `[PHONE]`, `[EMAIL]`, `[ADDRESS_LINE_1]`, `[ADDRESS_LINE_2]`
+- Leistungs-, Referenz- und Unternehmens-Texte in `src/content/siteContent.ts`
+- SEO-Titel/-Beschreibungen und ggf. Domain-/URL-Angaben
+- Favicon, optionale Icons und visuelle Branding-Farben
+- Impressum und Datenschutz mit rechtsgeprüften Inhalten
+
+## Pre-Production-Checkliste
+
+- [ ] Alle Template-Platzhalter durch freigegebene Kundendaten ersetzt oder bewusst entfernt
+- [ ] `Impressum` und `Datenschutz` final rechtlich geprüft und befüllt
+- [ ] Branding-Farben, Favicon und sonstige Assets kundenkonform ersetzt
+- [ ] SEO-Titel, Meta-Descriptions und Social-/Link-Vorschau-Inhalte geprüft
+- [ ] Kontaktformular und Angebotswizard im Zielprojekt mit echten Inhalten geprüft
+- [ ] Unabhängige Browser-QA auf 320 px, 390 px, 768 px und Desktop durchgeführt
+
+## Deployment-Annahmen
+
+- Build-Ziel ist eine statische Vite-Ausgabe.
+- `vercel.json`, `404.html` und die Router-Konfiguration erhalten direktes Laden von Unterseiten.
+- Die Vorlage ist auf Vercel-kompatibles Hosting ausgelegt, kann aber auch auf anderen SPA-fähigen Setups genutzt werden.
+- Die GitHub-Pages-Workflow-Konfiguration berücksichtigt sowohl Root-Sites (`<owner>.github.io`) als auch Projekt-Sites.
+
+## Qualität und QA
+
+- Die Formulare senden keine Daten an externe Dienste.
+- Validierung, Fokusführung, `aria-invalid` und `aria-describedby` bleiben Teil der Grundarchitektur.
+- Vor Produktionsabnahme ist unabhängige Browser-QA zwingend erforderlich.
+- Automatisierte Checks unterstützen die Qualitätssicherung, ersetzen aber keine finale Browser-Beobachtung.
+
+## Weitere Dokumentation
+
+- `docs/MITDIENST-WEBSITE-DEVELOPMENT-STANDARD.md` – initialer Entwicklungsstandard für Folgeprojekte

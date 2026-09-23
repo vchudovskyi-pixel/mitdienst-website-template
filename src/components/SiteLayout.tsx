@@ -1,14 +1,7 @@
 import { useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-
-const links = [
-  { to: '/', label: 'Start' },
-  { to: '/leistungen', label: 'Leistungen' },
-  { to: '/referenzen', label: 'Referenzen' },
-  { to: '/ueber-uns', label: 'Über uns' },
-  { to: '/angebot', label: 'Angebot' },
-  { to: '/kontakt', label: 'Kontakt' },
-]
+import { siteContent } from '../content/siteContent'
+import ContactDetails from './ContactDetails'
 
 export default function SiteLayout() {
   const mobileNavRef = useRef<HTMLDetailsElement>(null)
@@ -26,14 +19,14 @@ export default function SiteLayout() {
       </a>
       <header className="site-header">
         <div className="container header-inner">
-          <NavLink to="/" className="brand" aria-label="Muster Digital GmbH Startseite">
-            Muster Digital GmbH
+          <NavLink to="/" className="brand" aria-label={`${siteContent.company.name} Startseite`}>
+            {siteContent.company.name}
           </NavLink>
           <details className="mobile-nav" ref={mobileNavRef}>
             <summary aria-label="Menü öffnen">Menü</summary>
             <nav aria-label="Hauptnavigation">
               <ul>
-                {links.map((link) => (
+                {siteContent.navigation.map((link) => (
                   <li key={link.to}>
                     <NavLink to={link.to} onClick={closeMobileNav}>
                       {link.label}
@@ -45,7 +38,7 @@ export default function SiteLayout() {
           </details>
           <nav className="desktop-nav" aria-label="Hauptnavigation">
             <ul>
-              {links.map((link) => (
+              {siteContent.navigation.map((link) => (
                 <li key={link.to}>
                   <NavLink to={link.to}>{link.label}</NavLink>
                 </li>
@@ -62,15 +55,14 @@ export default function SiteLayout() {
       <footer className="site-footer">
         <div className="container footer-grid">
           <div>
-            <strong>Muster Digital GmbH</strong>
-            <p>
-              Fiktive Digitalagentur für moderne Websites, klare Prozesse und nachhaltige Ergebnisse für den Mittelstand.
-            </p>
+            <strong>{siteContent.company.name}</strong>
+            <p>{siteContent.company.tagline}</p>
+            <ContactDetails />
           </div>
           <div>
             <h2 className="footer-heading">Schnellzugriff</h2>
             <ul>
-              {links.map((link) => (
+              {siteContent.navigation.map((link) => (
                 <li key={link.to}>
                   <NavLink to={link.to}>{link.label}</NavLink>
                 </li>
