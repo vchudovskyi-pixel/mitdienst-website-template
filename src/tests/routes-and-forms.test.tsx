@@ -205,12 +205,12 @@ describe('form validation', () => {
     fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
 
     const continueButton = screen.getByRole('button', { name: /weiter/i })
-    const preferredEmail = screen.getByLabelText(/^e-mail$/i)
+    const [firstPreferredContact] = screen.getAllByRole('radio')
 
     fireEvent.click(continueButton)
 
     expect(screen.getByText(/bitte wählen sie eine kontaktmethode/i)).toBeInTheDocument()
-    await waitFor(() => expect(preferredEmail).toHaveFocus())
+    await waitFor(() => expect(firstPreferredContact).toHaveFocus())
     expect(continueButton).not.toHaveFocus()
   })
 
