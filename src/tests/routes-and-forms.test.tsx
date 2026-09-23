@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import App from '../App'
+import { siteContent } from '../content/siteContent'
 
 afterEach(() => {
   cleanup()
@@ -183,7 +184,7 @@ describe('form validation', () => {
     await waitFor(() => expect(contactName).toHaveFocus())
   })
 
-  it('requires a preferred contact method before the summary step', () => {
+  it('requires a preferred contact method before the summary step and focuses the radio group', async () => {
     renderPath('/angebot')
 
     fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
@@ -202,9 +203,15 @@ describe('form validation', () => {
 
     fireEvent.change(screen.getByLabelText(/ansprechpartner/i), { target: { value: 'Anna Beispiel' } })
     fireEvent.change(screen.getByLabelText(/^e-mail \*/i), { target: { value: 'anna@example.de' } })
-    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    const continueButton = screen.getByRole('button', { name: /weiter/i })
+    const preferredEmail = screen.getByLabelText(/^e-mail$/i)
+
+    fireEvent.click(continueButton)
 
     expect(screen.getByText(/bitte wählen sie eine kontaktmethode/i)).toBeInTheDocument()
+    await waitFor(() => expect(preferredEmail).toHaveFocus())
+    expect(continueButton).not.toHaveFocus()
   })
 
   it('clears only the corrected wizard field errors immediately', () => {
@@ -269,6 +276,28 @@ describe('form validation', () => {
     expect(screen.queryByText(/bitte geben sie einen ansprechpartner an/i)).not.toBeInTheDocument()
     expect(contactEmail).toHaveAttribute('aria-invalid', 'true')
     expect(screen.getByText(/bitte geben sie eine e-mail-adresse an/i)).toBeInTheDocument()
+  })
+
+  it('renders centralized wizard option lists from site content', () => {
+    renderPath('/angebot')
+
+    siteContent.offerPage.projectTypes.forEach((option) => {
+      expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
+    })
+
+    fireEvent.change(screen.getByLabelText(/projektart/i), { target: { value: 'Website-Relaunch' } })
+    fireEvent.change(screen.getByLabelText(/projektziel/i), { target: { value: 'Neue Website mit besserer Lead-Qualität.' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    siteContent.offerPage.timeframes.forEach((option) => {
+      expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
+    })
+
+    siteContent.offerPage.budgets.forEach((option) => {
+      expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
+    })
   })
 
   it('clears the preferred contact error immediately without clearing other contact-step errors', () => {
