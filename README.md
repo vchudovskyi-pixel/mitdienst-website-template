@@ -56,7 +56,9 @@ npm run preview
 
 ## Wo kundenspezifische Inhalte konfiguriert werden
 
-Zentrale Inhalte und Platzhalter liegen in:
+### Zentrale Inhalte
+
+Die meisten austauschbaren Inhalte und Platzhalter liegen in:
 
 - `src/content/siteContent.ts`
 
@@ -69,21 +71,53 @@ Dort werden insbesondere gepflegt:
 - Leistungsbausteine
 - Referenz-Platzhalter
 - Texte für Startseite, Über uns, Kontakt und Rechtstexte
+- Auswahloptionen für den Angebotswizard
+
+### Branding und Assets
+
+Folgende Dateien werden üblicherweise pro Kundenprojekt angepasst:
+
+- `src/index.css` – Farbwerte und visuelle Branding-Basics über CSS-Variablen im `:root`
+- `public/favicon.svg` – Favicon / Browser-Icon
+- `public/icons.svg` – optionale SVG-Sprite-Datei für projektspezifische Icons
+- `index.html` – Default-Meta-Description und Dokumenttitel
 
 ## Neues Kundenprojekt aus der Vorlage ableiten
 
 1. Neues Projekt-Repository oder neuen Branch aus dieser Vorlage erstellen.
 2. `src/content/siteContent.ts` mit freigegebenen Kundeninhalten befüllen.
-3. Platzhalter für Impressum und Datenschutz durch rechtsgeprüfte Inhalte ersetzen.
-4. Referenz- und Leistungsinhalte pro Kundenprojekt abstimmen.
-5. Browser-QA auf mobilen und Desktop-Breakpoints durchführen.
-6. Erst nach erfolgreicher unabhängiger QA produktive Freigabe erteilen.
+3. Branding in `src/index.css` sowie ggf. `public/favicon.svg` und `public/icons.svg` ersetzen.
+4. Platzhalter für Impressum und Datenschutz durch rechtsgeprüfte Inhalte ersetzen.
+5. Referenz-, Leistungs- und SEO-Inhalte pro Kundenprojekt abstimmen.
+6. Browser-QA auf mobilen und Desktop-Breakpoints durchführen.
+7. Erst nach erfolgreicher unabhängiger QA produktive Freigabe erteilen.
+
+## Vor Produktion ersetzen
+
+Vor einem Go-live müssen mindestens diese Punkte projektspezifisch ersetzt oder bestätigt werden:
+
+- `[COMPANY_NAME]`, `[COMPANY_TAGLINE]`, `[LEGAL_ENTITY]`, `[MANAGING_DIRECTOR]`
+- `[PHONE]`, `[EMAIL]`, `[ADDRESS_LINE_1]`, `[ADDRESS_LINE_2]`
+- Leistungs-, Referenz- und Unternehmens-Texte in `src/content/siteContent.ts`
+- SEO-Titel/-Beschreibungen und ggf. Domain-/URL-Angaben
+- Favicon, optionale Icons und visuelle Branding-Farben
+- Impressum und Datenschutz mit rechtsgeprüften Inhalten
+
+## Pre-Production-Checkliste
+
+- [ ] Alle Template-Platzhalter durch freigegebene Kundendaten ersetzt oder bewusst entfernt
+- [ ] `Impressum` und `Datenschutz` final rechtlich geprüft und befüllt
+- [ ] Branding-Farben, Favicon und sonstige Assets kundenkonform ersetzt
+- [ ] SEO-Titel, Meta-Descriptions und Social-/Link-Vorschau-Inhalte geprüft
+- [ ] Kontaktformular und Angebotswizard im Zielprojekt mit echten Inhalten geprüft
+- [ ] Unabhängige Browser-QA auf 320 px, 390 px, 768 px und Desktop durchgeführt
 
 ## Deployment-Annahmen
 
 - Build-Ziel ist eine statische Vite-Ausgabe.
 - `vercel.json`, `404.html` und die Router-Konfiguration erhalten direktes Laden von Unterseiten.
 - Die Vorlage ist auf Vercel-kompatibles Hosting ausgelegt, kann aber auch auf anderen SPA-fähigen Setups genutzt werden.
+- Die GitHub-Pages-Workflow-Konfiguration berücksichtigt sowohl Root-Sites (`<owner>.github.io`) als auch Projekt-Sites.
 
 ## Qualität und QA
 
