@@ -7,6 +7,14 @@ type LegalPlaceholderPageProps = {
 }
 
 export default function LegalPlaceholderPage({ title, description }: LegalPlaceholderPageProps) {
+  const checklistItems = [
+    `Firma / Rechtsform: ${siteContent.company.legalEntity}`,
+    `Vertretungsberechtigte Person: ${siteContent.company.managingDirector}`,
+    `Kontaktangaben: ${siteContent.company.phone}, ${siteContent.company.email}`,
+    `Anschrift: ${siteContent.company.address.join(', ')}`,
+    ...siteContent.legalChecklistItems,
+  ]
+
   return (
     <>
       <PageMeta title={title} description={description} />
@@ -19,7 +27,7 @@ export default function LegalPlaceholderPage({ title, description }: LegalPlaceh
       <section className="card">
         <h2>Erforderliche Ergänzungen vor Livegang</h2>
         <ul>
-          {siteContent.legalChecklist.map((item) => (
+          {checklistItems.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>

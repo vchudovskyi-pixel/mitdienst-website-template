@@ -190,11 +190,7 @@ export const siteContent = {
       result: 'Beschreiben Sie hier den Mehrwert in klarer, verständlicher Sprache.',
     },
   ],
-  legalChecklist: [
-    'Firma / Rechtsform: [LEGAL_ENTITY]',
-    'Vertretungsberechtigte Person: [MANAGING_DIRECTOR]',
-    'Kontaktangaben: [PHONE], [EMAIL]',
-    'Anschrift: [ADDRESS_LINE_1], [ADDRESS_LINE_2]',
+  legalChecklistItems: [
     'Register-, Steuer- und Aufsichtsangaben nach Bedarf',
     'Datenschutzangaben zu Verarbeitungszwecken, Rechtsgrundlagen und eingesetzten Diensten',
   ],

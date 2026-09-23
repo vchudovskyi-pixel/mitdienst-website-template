@@ -281,6 +281,8 @@ describe('form validation', () => {
   it('renders centralized wizard option lists from site content', () => {
     renderPath('/angebot')
 
+    expect(screen.getByRole('option', { name: 'Website-Relaunch' })).toBeInTheDocument()
+
     siteContent.offerPage.projectTypes.forEach((option) => {
       expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
     })
@@ -291,9 +293,13 @@ describe('form validation', () => {
     fireEvent.change(screen.getByLabelText(/unternehmen/i), { target: { value: 'Muster Maschinenbau' } })
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
 
+    expect(screen.getByRole('option', { name: 'In 1–2 Monaten' })).toBeInTheDocument()
+
     siteContent.offerPage.timeframes.forEach((option) => {
       expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
     })
+
+    expect(screen.getByRole('option', { name: '10.000–20.000 €' })).toBeInTheDocument()
 
     siteContent.offerPage.budgets.forEach((option) => {
       expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
@@ -306,6 +312,8 @@ describe('form validation', () => {
       target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
     })
     fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    expect(screen.getByRole('radio', { name: 'E-Mail' })).toBeInTheDocument()
 
     siteContent.offerPage.preferredContactOptions.forEach((option) => {
       expect(screen.getByRole('radio', { name: option })).toBeInTheDocument()
