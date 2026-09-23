@@ -4,6 +4,15 @@ type ContactDetailsProps = {
   showManagingDirector?: boolean
 }
 
+const isPlaceholderValue = (value: string) => /^\[.+\]$/.test(value)
+
+const renderContactValue = (label: string, value: string, hrefPrefix: 'tel:' | 'mailto:') => (
+  <p>
+    {label}:{' '}
+    {isPlaceholderValue(value) ? value : <a href={`${hrefPrefix}${value}`}>{value}</a>}
+  </p>
+)
+
 export default function ContactDetails({ showManagingDirector = false }: ContactDetailsProps) {
   return (
     <address className="contact-details">
@@ -11,14 +20,8 @@ export default function ContactDetails({ showManagingDirector = false }: Contact
       {siteContent.company.address.map((line) => (
         <p key={line}>{line}</p>
       ))}
-      <p>
-        Telefon:{' '}
-        <a href={`tel:${siteContent.company.phone}`}>{siteContent.company.phone}</a>
-      </p>
-      <p>
-        E-Mail:{' '}
-        <a href={`mailto:${siteContent.company.email}`}>{siteContent.company.email}</a>
-      </p>
+      {renderContactValue('Telefon', siteContent.company.phone, 'tel:')}
+      {renderContactValue('E-Mail', siteContent.company.email, 'mailto:')}
       {showManagingDirector ? <p>Geschäftsführung: {siteContent.company.managingDirector}</p> : null}
     </address>
   )

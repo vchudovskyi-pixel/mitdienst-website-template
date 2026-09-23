@@ -391,7 +391,7 @@ legend {
 }
 
 .contact-layout {
-  align-items: start;
+  align-items: flex-start;
 }
 
 @media (max-width: 900px) {
