@@ -298,6 +298,18 @@ describe('form validation', () => {
     siteContent.offerPage.budgets.forEach((option) => {
       expect(screen.getByRole('option', { name: option })).toBeInTheDocument()
     })
+
+    fireEvent.change(screen.getByLabelText(/zeitrahmen/i), { target: { value: 'In 1–2 Monaten' } })
+    fireEvent.change(screen.getByLabelText(/budgetrahmen/i), { target: { value: '10.000–20.000 €' } })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+    fireEvent.change(screen.getByLabelText(/projektbeschreibung/i), {
+      target: { value: 'Mehrsprachige Produktseiten und besserer Anfrageprozess.' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /weiter/i }))
+
+    siteContent.offerPage.preferredContactOptions.forEach((option) => {
+      expect(screen.getByRole('radio', { name: option })).toBeInTheDocument()
+    })
   })
 
   it('clears the preferred contact error immediately without clearing other contact-step errors', () => {

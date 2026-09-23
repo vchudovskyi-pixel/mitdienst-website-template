@@ -11,8 +11,14 @@ export default function ContactDetails({ showManagingDirector = false }: Contact
       {siteContent.company.address.map((line) => (
         <p key={line}>{line}</p>
       ))}
-      <p>Telefon: {siteContent.company.phone}</p>
-      <p>E-Mail: {siteContent.company.email}</p>
+      <p>
+        Telefon:{' '}
+        <a href={`tel:${siteContent.company.phone}`}>{siteContent.company.phone}</a>
+      </p>
+      <p>
+        E-Mail:{' '}
+        <a href={`mailto:${siteContent.company.email}`}>{siteContent.company.email}</a>
+      </p>
       {showManagingDirector ? <p>Geschäftsführung: {siteContent.company.managingDirector}</p> : null}
     </address>
   )
