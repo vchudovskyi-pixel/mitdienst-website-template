@@ -307,7 +307,7 @@ export default function OfferPage() {
                   type="url"
                   value={data.website}
                   onChange={(event) => updateField('website', event.target.value)}
-                  placeholder="https://www.[DOMAIN]"
+                  placeholder="https://www.example.invalid"
                 />
               </div>
             </>

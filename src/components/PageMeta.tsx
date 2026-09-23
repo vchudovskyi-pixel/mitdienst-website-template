@@ -28,7 +28,10 @@ const setMetaByProperty = (property: string, content: string) => {
 
 export default function PageMeta({ title, description }: PageMetaProps) {
   useEffect(() => {
-    const fullTitle = `${title} | ${siteContent.seo.siteName}`
+    const fullTitle =
+      title === siteContent.seo.siteName || title === siteContent.seo.defaultTitle
+        ? siteContent.seo.siteName
+        : `${title} | ${siteContent.seo.siteName}`
 
     document.title = fullTitle
 
