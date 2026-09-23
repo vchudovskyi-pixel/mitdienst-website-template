@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import PageMeta from '../components/PageMeta'
 import { siteContent } from '../content/siteContent'
+import ContactDetails from '../components/ContactDetails'
 
 type ContactFormData = {
   name: string
@@ -204,15 +205,7 @@ export default function ContactPage() {
         <aside className="card" aria-label="Kontakt-Platzhalter">
           <h2>Kontakt-Platzhalter</h2>
           <p>Diese Angaben werden zentral in <code>src/content/siteContent.ts</code> gepflegt.</p>
-          <address className="contact-details">
-            <p>{siteContent.company.legalEntity}</p>
-            {siteContent.company.address.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-            <p>Telefon: {siteContent.company.phone}</p>
-            <p>E-Mail: {siteContent.company.email}</p>
-            <p>Geschäftsführung: {siteContent.company.managingDirector}</p>
-          </address>
+          <ContactDetails showManagingDirector />
         </aside>
       </section>
     </>

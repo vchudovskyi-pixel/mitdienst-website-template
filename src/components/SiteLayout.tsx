@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { siteContent } from '../content/siteContent'
+import ContactDetails from './ContactDetails'
 
 export default function SiteLayout() {
   const mobileNavRef = useRef<HTMLDetailsElement>(null)
@@ -56,14 +57,7 @@ export default function SiteLayout() {
           <div>
             <strong>{siteContent.company.name}</strong>
             <p>{siteContent.company.tagline}</p>
-            <address className="contact-details">
-              <p>{siteContent.company.legalEntity}</p>
-              {siteContent.company.address.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-              <p>Telefon: {siteContent.company.phone}</p>
-              <p>E-Mail: {siteContent.company.email}</p>
-            </address>
+            <ContactDetails />
           </div>
           <div>
             <h2 className="footer-heading">Schnellzugriff</h2>

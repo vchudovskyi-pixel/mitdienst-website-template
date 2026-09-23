@@ -28,19 +28,26 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Build
+        env:
+          GITHUB_OWNER: ${{ github.repository_owner }}
         run: |
-          export VITE_APP_BASE_PATH="/$(python - <<'PY'
+          export VITE_APP_BASE_PATH="$(python - <<'PY'
 import os
 from urllib.parse import quote
 
+owner = os.environ['GITHUB_OWNER']
 repo_name = os.environ['GITHUB_REPOSITORY'].split('/', 1)[1]
-print(quote(repo_name, safe=''))
+encoded_repo = quote(repo_name, safe='')
+encoded_root_repo = quote(f'{owner}.github.io', safe='')
+
+if encoded_repo.lower() == encoded_root_repo.lower():
+    print('/')
+else:
+    print(f'/{encoded_repo}/')
 PY
-          )/"
+          )"
+          npm ci
           npm run build
 
       - name: Setup Pages
