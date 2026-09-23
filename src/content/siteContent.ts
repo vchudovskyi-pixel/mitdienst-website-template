@@ -86,7 +86,10 @@ export const siteContent = {
     projectTypes: ['Webdesign & Entwicklung', 'Website-Relaunch', 'Landingpage', 'Strategieberatung'],
     timeframes: ['Sofortiger Start', 'In 1–2 Monaten', 'In 3–6 Monaten', 'Noch offen'],
     budgets: ['5.000–10.000 €', '10.000–20.000 €', '20.000 €+', 'Noch unklar'],
-    preferredContactOptions: ['E-Mail', 'Telefon'],
+    preferredContactOptions: [
+      { value: 'E-Mail', label: 'E-Mail', focusTarget: true },
+      { value: 'Telefon', label: 'Telefon', focusTarget: false },
+    ],
   },
   legalPages: {
     impressumDescription: 'Rechtlicher Platzhalter für das Impressum von [LEGAL_ENTITY].',

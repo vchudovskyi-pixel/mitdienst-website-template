@@ -437,18 +437,18 @@ export default function OfferPage() {
               >
                 <legend>Bevorzugte Kontaktmethode *</legend>
                 <div className="radio-group">
-                  {siteContent.offerPage.preferredContactOptions.map((option, index) => (
-                    <label key={option}>
+                  {siteContent.offerPage.preferredContactOptions.map((option) => (
+                    <label key={option.value}>
                       <input
                         type="radio"
                         required
-                        ref={index === 0 ? preferredContactRef : undefined}
+                        ref={option.focusTarget ? preferredContactRef : undefined}
                         name="preferredContact"
-                        value={option}
-                        checked={data.preferredContact === option}
+                        value={option.value}
+                        checked={data.preferredContact === option.value}
                         onChange={(event) => updateField('preferredContact', event.target.value)}
                       />
-                      {option}
+                      {option.label}
                     </label>
                   ))}
                 </div>
